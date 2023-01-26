@@ -32,11 +32,11 @@
           ""
         ],
         "adminEmails": [
-          "info@idealme.com"
+          "jill.schoenberg@gmail.com"
         ],
-        "siteName": "Stitch11",
-        "imageUrl": "https://i0.wp.com/stitch11.com/wp-content/uploads/2023/01/Blog-Post-Featured-Image-Portrait-Crochet-Tote-Bag.jpg?fit=700%2C1000&ssl=1",
-        "highlightColor": "rgb(0, 0, 238)"
+        "siteName": "JournalBuddies.com",
+        "imageUrl": "https://www.journalbuddies.com/wp-content/uploads/2022/09/Space-Writing-Prompts-SMI.jpg",
+        "highlightColor": "rgb(0, 0, 0)"
       },
       "indexing": {
         "admin_userVisibility": "visible",
@@ -129,7 +129,7 @@
       },
       "searchHooks": {
         "admin_userVisibility": "visible",
-        "selectors": [".search-form",".widget_search"]
+        "selectors": [".wp-block-search__icon-button",".search-form",".search-field",".search-item",".uagb-search-form__container"]
       },
       "inlineSearch": {
         "admin_userVisibility": "visible",
@@ -151,7 +151,7 @@
             "id": "in-content-DCM",
             "injection": "auto-inject",
             "initialGroup": "related",
-            "injectionSelector": ".entry-contentp:nth-of-type(6)" ,
+            "injectionSelector": ".entry-content p:nth-of-type(6)" ,
             "injectionPosition": "after selector",
             "theme": "auto",
             "themeParameters": [],

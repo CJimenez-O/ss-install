@@ -5,7 +5,6 @@ async function run(url, email) {
   const browser = await puppeteer.launch({
     headless: true,
     ignoreHTTPSErrors: true,
-
   });
 
   //   console.log("=== Opening browser ===")
@@ -25,12 +24,12 @@ async function run(url, email) {
   });
 
 
-  await goto_Page(`${url}`, { waitUntil: "networkidle0" });
+  await goto_Page(`${url}`);
 
   // elementor-widget-theme-post-content & post-content
   let dcmSelector = await page.evaluate(() => {
 
-    let dcmSelectorList = [
+    let dcmSelectorList : string[] = [
       'entry-content',
       'post-content',
       'elementor-widget-theme-post-content',
@@ -38,8 +37,9 @@ async function run(url, email) {
     ]
 
     for(let i = 0; i <= dcmSelectorList.length-1; i++){
+      let dcmSelectorItem : Element | null = document.querySelector(`.${dcmSelectorList[i]}`)!
       try {
-        if (document.querySelector(`.${dcmSelectorList[i]}`).innerHTML !== null) {
+        if (dcmSelectorItem.innerHTML ) {
           return dcmSelectorList[i];
         }
       } catch {
@@ -49,10 +49,10 @@ async function run(url, email) {
     
   });
 
-  let searchFunc = await page.evaluate(() => {
-    let existingSearch = [];
+  let searchFunc = await page.evaluate(() : string[] => {
+    let existingSearch : string[] = [];
 
-    let searchSelectors = [
+    let searchSelectors : string[] = [
       "search-toggle-icon",
       "wp-block-search__button-outside",
       "wp-block-search__icon-button",
@@ -69,11 +69,10 @@ async function run(url, email) {
       "site-search-toggle",
       "fa-search",
       "mobile-searchform",
-      "feastsearchtoggle",
-      "uagb-search-form__container"
+      "feastsearchtoggle"
     ];
 
-    for (let i = 0; i <= searchSelectors.length - 1; i++) {
+    for (let i : number = 0; i <= searchSelectors.length - 1; i++) {
       try {
         if (document.querySelector(`.${searchSelectors[i]}`)) {
           existingSearch.push(`.${searchSelectors[i]}`);
@@ -87,20 +86,21 @@ async function run(url, email) {
     return existingSearch;
   });
 
-  let siteName = await page.evaluate(() => {
-    return document.head
-      .querySelector('meta[property="og:site_name"]')
-      .getAttribute("content");
+  let siteName = await page.evaluate(() : string | null => {
+    let scrapedName : Element | null = document.head.querySelector('meta[property="og:site_name"]')!
+    return scrapedName.getAttribute("content");
   });
 
-  let siteColor = await page.$eval('nav li  a', el => getComputedStyle(el).getPropertyValue('color'))
+  let siteColor : string = await page.$eval('nav li  a', el => getComputedStyle(el).getPropertyValue('color'))
 
 
-  let siteImage = await page.evaluate(() => {
-    return document.head
-      .querySelector('meta[property="og:image"]')
-      .getAttribute("content");
+  let siteImage = await page.evaluate(() : string | null => {
+    let scrapedImage : Element | null = document.head.querySelector('meta[property="og:image"]')!
+    return scrapedImage.getAttribute('content')
+    
   });
+
+
   await browser.close();
 
   console.log(dcmSelector)
@@ -260,7 +260,7 @@ async function run(url, email) {
             "id": "in-content-DCM",
             "injection": "auto-inject",
             "initialGroup": "related",
-            "injectionSelector": ${JSON.stringify('.' + dcmSelector + ' ' + 'p:nth-of-type(6)')} ,
+            "injectionSelector": ${JSON.stringify('.' + dcmSelector + '' + 'p:nth-of-type(6)')} ,
             "injectionPosition": "after selector",
             "theme": "auto",
             "themeParameters": [],
@@ -1267,21 +1267,21 @@ async function run(url, email) {
     if (err) throw err;
     }
 );
-  async function goto_Page(page_URL, sym) {
+  async function goto_Page(page_URL) {
     try {
       await page.goto(page_URL, {
         waitUntil: "domcontentloaded",
         timeout: 18000,
       });
     } catch {
-      console.log(`Error in loading ${sym} page, re-trying...`);
+      console.log(`Error in loading page, re-trying...`);
       await goto_Page(page_URL);
     }
   }
 }
 
 run(
-  "https://www.journalbuddies.com/list-of-prompts/space-writing-prompts/","jill.schoenberg@gmail.com"
+  "https://stitch11.com/easy-to-follow-crochet-tote-bag-patterns/","info@idealme.com"
 );
 
 // run(
