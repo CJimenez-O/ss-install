@@ -29,14 +29,14 @@
         "language": "en",
         "adNetwork": " ",
         "verticals": [
-          "food"
+          ""
         ],
         "adminEmails": [
-          "theturquoisehome@gmail.com"
+          "info@idealme.com"
         ],
-        "siteName": "The Turquoise Home",
-        "imageUrl": "https://theturquoisehome.com/wp-content/uploads/2022/04/coffee-table-books-1.jpg",
-        "highlightColor": "rgb(6, 42, 86)"
+        "siteName": "Stitch11",
+        "imageUrl": "https://i0.wp.com/stitch11.com/wp-content/uploads/2023/01/Blog-Post-Featured-Image-Portrait-Crochet-Tote-Bag.jpg?fit=700%2C1000&ssl=1",
+        "highlightColor": "rgb(0, 0, 238)"
       },
       "indexing": {
         "admin_userVisibility": "visible",
@@ -78,7 +78,9 @@
         "favoritesSignInRequired": true
       },
       "css": {
-        "admin_userVisibility": "visible"
+        "admin_userVisibility": "visible",
+        "globalCss": "slick-film-strip{ margin-top: 10px;}"
+
       },
       "floatingButtons": {
         "compactMode": "default",
@@ -127,7 +129,7 @@
       },
       "searchHooks": {
         "admin_userVisibility": "visible",
-        "selectors": [".search-toggle-icon",".wp-block-search__icon-button",".search-form",".search-field",".search-toggle-open-container"]
+        "selectors": [".search-form",".widget_search"]
       },
       "inlineSearch": {
         "admin_userVisibility": "visible",
@@ -138,7 +140,7 @@
             "initialGroup": "related",
             "injectionSelector": ".entry-content",
             "injectionPosition": "after selector",
-            "titleHtml": "<span class="ss-widget-title">Explore More</span>",
+            "titleHtml": "<span class=\"ss-widget-title\">Explore More</span>",
             "theme": "auto",
             "themeParameters": [],
             "fallbackGroup": "related",
@@ -149,7 +151,7 @@
             "id": "in-content-DCM",
             "injection": "auto-inject",
             "initialGroup": "related",
-            "injectionSelector": ".entry-content p:nth-of-type(6)",
+            "injectionSelector": ".entry-contentp:nth-of-type(6)" ,
             "injectionPosition": "after selector",
             "theme": "auto",
             "themeParameters": [],
@@ -173,7 +175,8 @@
         "injectFilmstripPosition": "after selector",
         "mode": "og-card",
         "cardCorners": "rounded",
-        "imageContainment": "cover"
+        "imageContainment": "cover",
+        "maxWidth": 1140
       },
       "filmstripToolbar": {
         "admin_userVisibility": "visible",
@@ -667,7 +670,9 @@
         },
         "applicability": {
           "sitemapTypes": [
-            "posts"
+            "posts",
+            "articles",
+            "wp-json-posts"
           ],
           "admin_userVisibility": "visible",
           "pageUrls": [],

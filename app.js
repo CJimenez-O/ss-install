@@ -1,4 +1,3 @@
-//performance testing
 const puppeteer = require("puppeteer");
 var fs = require('fs');
 
@@ -6,19 +5,8 @@ async function run(url, email) {
   const browser = await puppeteer.launch({
     headless: true,
     ignoreHTTPSErrors: true,
-    args: [
-      "--no-first-run",
-      "--no-zygote",
-      "--single-process",
-      "--disable-gpu",
-      "--disable-features=IsolateOrigins,site-per-process",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-accelerated-2d-canvas",
-    ],
-  });
 
-  let obj = {};
+  });
 
   //   console.log("=== Opening browser ===")
   const page = await browser.newPage();
@@ -39,19 +27,31 @@ async function run(url, email) {
 
   await goto_Page(`${url}`, { waitUntil: "networkidle0" });
 
+  // elementor-widget-theme-post-content & post-content
   let dcmSelector = await page.evaluate(() => {
-    try {
-      if (document.querySelector(".entry-content").innerHTML !== null) {
-        let status = "DCM: Success!";
-        return status;
+
+    let dcmSelectorList = [
+      'entry-content',
+      'post-content',
+      'elementor-widget-theme-post-content',
+      'isopad'
+    ]
+
+    for(let i = 0; i <= dcmSelectorList.length-1; i++){
+      try {
+        if (document.querySelector(`.${dcmSelectorList[i]}`).innerHTML !== null) {
+          return dcmSelectorList[i];
+        }
+      } catch {
+        console.log("DCM: Find a new selector.");
       }
-    } catch {
-      return "DCM: Find a new selector.";
     }
+    
   });
 
   let searchFunc = await page.evaluate(() => {
     let existingSearch = [];
+
     let searchSelectors = [
       "search-toggle-icon",
       "wp-block-search__button-outside",
@@ -65,9 +65,14 @@ async function run(url, email) {
       "widget_search",
       "feast-mobile-search",
       "slide-search",
+      "search-item",
+      "site-search-toggle",
+      "fa-search",
+      "mobile-searchform",
+      "feastsearchtoggle"
     ];
 
-    for (let i = 0; i <= 12; i++) {
+    for (let i = 0; i <= searchSelectors.length - 1; i++) {
       try {
         if (document.querySelector(`.${searchSelectors[i]}`)) {
           existingSearch.push(`.${searchSelectors[i]}`);
@@ -75,7 +80,9 @@ async function run(url, email) {
       } catch {
         console.log("fail");
       }
+      
     }
+
     return existingSearch;
   });
 
@@ -94,11 +101,6 @@ async function run(url, email) {
       .getAttribute("content");
   });
   await browser.close();
-
-  obj = {
-    DCM: dcmSelector,
-    Search: searchFunc,
-  };
 
   console.log(dcmSelector)
   console.log(searchFunc)
@@ -135,7 +137,7 @@ async function run(url, email) {
         "language": "en",
         "adNetwork": " ",
         "verticals": [
-          "food"
+          ""
         ],
         "adminEmails": [
           "${email}"
@@ -184,7 +186,9 @@ async function run(url, email) {
         "favoritesSignInRequired": true
       },
       "css": {
-        "admin_userVisibility": "visible"
+        "admin_userVisibility": "visible",
+        "globalCss": "slick-film-strip{ margin-top: 10px;}"
+
       },
       "floatingButtons": {
         "compactMode": "default",
@@ -233,7 +237,7 @@ async function run(url, email) {
       },
       "searchHooks": {
         "admin_userVisibility": "visible",
-        "selectors": ${JSON.stringify(obj.Search)}
+        "selectors": ${JSON.stringify(searchFunc)}
       },
       "inlineSearch": {
         "admin_userVisibility": "visible",
@@ -242,9 +246,9 @@ async function run(url, email) {
             "id": "below-content-DCM",
             "injection": "auto-inject",
             "initialGroup": "related",
-            "injectionSelector": ".entry-content",
+            "injectionSelector": ${JSON.stringify('.' + dcmSelector)},
             "injectionPosition": "after selector",
-            "titleHtml": "<span class=\"ss-widget-title\">Explore More</span>",
+            "titleHtml": ${JSON.stringify("<span class=\"ss-widget-title\">Explore More</span>")},
             "theme": "auto",
             "themeParameters": [],
             "fallbackGroup": "related",
@@ -255,7 +259,7 @@ async function run(url, email) {
             "id": "in-content-DCM",
             "injection": "auto-inject",
             "initialGroup": "related",
-            "injectionSelector": ".entry-content p:nth-of-type(6)",
+            "injectionSelector": ${JSON.stringify('.' + dcmSelector + '' + 'p:nth-of-type(6)')} ,
             "injectionPosition": "after selector",
             "theme": "auto",
             "themeParameters": [],
@@ -279,7 +283,8 @@ async function run(url, email) {
         "injectFilmstripPosition": "after selector",
         "mode": "og-card",
         "cardCorners": "rounded",
-        "imageContainment": "cover"
+        "imageContainment": "cover",
+        "maxWidth": 1140
       },
       "filmstripToolbar": {
         "admin_userVisibility": "visible",
@@ -773,7 +778,9 @@ async function run(url, email) {
         },
         "applicability": {
           "sitemapTypes": [
-            "posts"
+            "posts",
+            "articles",
+            "wp-json-posts"
           ],
           "admin_userVisibility": "visible",
           "pageUrls": [],
@@ -1273,5 +1280,9 @@ async function run(url, email) {
 }
 
 run(
-  "https://theturquoisehome.com/design-coffee-table-books/","theturquoisehome@gmail.com"
+  "https://stitch11.com/easy-to-follow-crochet-tote-bag-patterns/","info@idealme.com"
 );
+
+// run(
+//   "https://idealme.com/10-blogging-apps-every-blogger-should-be-using/","info@idealme.com"
+// );
