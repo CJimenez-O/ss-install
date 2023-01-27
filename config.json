@@ -32,11 +32,11 @@
           ""
         ],
         "adminEmails": [
-          "jill.schoenberg@gmail.com"
+          "melissaringstaff@gmail.com"
         ],
-        "siteName": "JournalBuddies.com",
-        "imageUrl": "https://www.journalbuddies.com/wp-content/uploads/2022/09/Space-Writing-Prompts-SMI.jpg",
-        "highlightColor": "rgb(0, 0, 0)"
+        "siteName": "A Virtuous Woman: A Proverbs 31 Ministry",
+        "imageUrl": "https://avirtuouswoman.org/wp-content/uploads/2022/01/Melissa2-825x1024.jpg",
+        "highlightColor": "rgb(45, 55, 72)"
       },
       "indexing": {
         "admin_userVisibility": "visible",
@@ -129,7 +129,7 @@
       },
       "searchHooks": {
         "admin_userVisibility": "visible",
-        "selectors": [".wp-block-search__icon-button",".search-form",".search-field",".search-item",".uagb-search-form__container"]
+        "selectors": [".search-toggle-icon",".search-form",".search-field",".search-toggle-open-container"]
       },
       "inlineSearch": {
         "admin_userVisibility": "visible",

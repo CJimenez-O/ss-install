@@ -1,3 +1,23 @@
+// ============= Description =====================
+// - Using site url and email as parameters we can 
+// - go to homepage and grab Meta Site Image
+// - Grabs post url from post-sitemap
+// - After jumping to post it searchs for 
+// - DCM selector available 
+// - Search Selectors available 
+// - Site Name
+// - Site Color
+// - Then add all values to Slickstream config 
+// - create config.json 
+
+// ============= Need to add =====================
+// add error catching for all values and continue if errors
+//
+// nice possible trigger when site finishes " site review " ?
+// run with button click ? 
+
+
+const GetSitemapLinks = require("get-sitemap-links").default;
 const puppeteer = require("puppeteer");
 var fs = require('fs');
 
@@ -5,29 +25,29 @@ async function run(url, email) {
   const browser = await puppeteer.launch({
     headless: true,
     ignoreHTTPSErrors: true,
-
   });
 
-  //   console.log("=== Opening browser ===")
   const page = await browser.newPage();
-  await page.setRequestInterception(true);
-
-  page.on("request", (request) => {
-    if (
-      ["image", "stylesheet", "font", "script"].indexOf(
-        request.resourceType()
-      ) !== -1
-    ) {
-      request.abort();
-    } else {
-      request.continue();
-    }
-  });
-
 
   await goto_Page(`${url}`, { waitUntil: "networkidle0" });
 
-  // elementor-widget-theme-post-content & post-content
+   // get Site Image from meta
+   let siteImage = await page.evaluate(() => {
+    return document.head
+      .querySelector('meta[property="og:image"]')
+      .getAttribute("content");
+  });
+
+  // get post link from sitemap
+  const postLinks = await GetSitemapLinks(
+    `${url}/post-sitemap.xml`
+  );
+
+  let postUrl = postLinks[2]
+  console.log(`Demo Link: ${postUrl}`)
+  await goto_Page(`${postUrl}`, { waitUntil: "networkidle0" });
+
+  // check if DCM selectors exist 
   let dcmSelector = await page.evaluate(() => {
 
     let dcmSelectorList = [
@@ -43,12 +63,19 @@ async function run(url, email) {
           return dcmSelectorList[i];
         }
       } catch {
-        console.log("DCM: Find a new selector.");
+        console.log("Fail");
       }
     }
     
   });
 
+  if(dcmSelector !== undefined){
+    console.log("\x1b[32m", 'DCM: Success')
+  }else{
+    console.log("\x1b[31m",'DCM: Failed')
+  }
+
+  // check if search classes exist
   let searchFunc = await page.evaluate(() => {
     let existingSearch = [];
 
@@ -87,25 +114,25 @@ async function run(url, email) {
     return existingSearch;
   });
 
+  if(searchFunc.length !== 0){
+    console.log("\x1b[32m",'Search Hooks: Success')
+  }else{
+    console.log("\x1b[31m",'Search Hooks: Failed')
+  }
+
+  // get Site name from Meta
   let siteName = await page.evaluate(() => {
     return document.head
       .querySelector('meta[property="og:site_name"]')
       .getAttribute("content");
   });
 
+  // get color from navbar links
   let siteColor = await page.$eval('nav li  a', el => getComputedStyle(el).getPropertyValue('color'))
-
-
-  let siteImage = await page.evaluate(() => {
-    return document.head
-      .querySelector('meta[property="og:image"]')
-      .getAttribute("content");
-  });
+ 
+ 
   await browser.close();
 
-  console.log(dcmSelector)
-  console.log(searchFunc)
- 
   let config = 
   `
   {
@@ -1263,10 +1290,13 @@ async function run(url, email) {
   
   `
 
+  // create config json file
   fs.writeFile ("config.json", config, function(err) {
     if (err) throw err;
     }
-);
+  );
+
+  // launch and catch error is DOM is not loaded in 18 seconds 
   async function goto_Page(page_URL, sym) {
     try {
       await page.goto(page_URL, {
@@ -1281,7 +1311,7 @@ async function run(url, email) {
 }
 
 run(
-  "https://www.journalbuddies.com/list-of-prompts/space-writing-prompts/","jill.schoenberg@gmail.com"
+  "https://avirtuouswoman.org","melissaringstaff@gmail.com"
 );
 
 // run(

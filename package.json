@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "get-sitemap-links": "^1.0.6",
     "puppeteer": "^19.5.2"
   }
 }
