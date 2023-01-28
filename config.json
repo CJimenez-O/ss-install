@@ -32,11 +32,11 @@
           ""
         ],
         "adminEmails": [
-          "melissaringstaff@gmail.com"
+          " domesticallyspeaking@yahoo.com"
         ],
-        "siteName": "A Virtuous Woman: A Proverbs 31 Ministry",
-        "imageUrl": "https://avirtuouswoman.org/wp-content/uploads/2022/01/Melissa2-825x1024.jpg",
-        "highlightColor": "rgb(45, 55, 72)"
+        "siteName": "Domestically Speaking",
+        "imageUrl": "",
+        "highlightColor": "rgb(173, 172, 165)"
       },
       "indexing": {
         "admin_userVisibility": "visible",
@@ -80,7 +80,6 @@
       "css": {
         "admin_userVisibility": "visible",
         "globalCss": "slick-film-strip{ margin-top: 10px;}"
-
       },
       "floatingButtons": {
         "compactMode": "default",
@@ -129,7 +128,7 @@
       },
       "searchHooks": {
         "admin_userVisibility": "visible",
-        "selectors": [".search-toggle-icon",".search-form",".search-field",".search-toggle-open-container"]
+        "selectors": [".search-toggle-icon",".search-form",".search-field",".search-toggle-open-container",".widget_search"]
       },
       "inlineSearch": {
         "admin_userVisibility": "visible",

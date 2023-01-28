@@ -29,21 +29,13 @@ async function run(url, email) {
 
   const page = await browser.newPage();
 
-  await goto_Page(`${url}`, { waitUntil: "networkidle0" });
-
-   // get Site Image from meta
-   let siteImage = await page.evaluate(() => {
-    return document.head
-      .querySelector('meta[property="og:image"]')
-      .getAttribute("content");
-  });
-
   // get post link from sitemap
   const postLinks = await GetSitemapLinks(
     `${url}/post-sitemap.xml`
   );
 
   let postUrl = postLinks[2]
+  // console.log(postUrl)
   console.log(`Demo Link: ${postUrl}`)
   await goto_Page(`${postUrl}`, { waitUntil: "networkidle0" });
 
@@ -126,6 +118,14 @@ async function run(url, email) {
       .querySelector('meta[property="og:site_name"]')
       .getAttribute("content");
   });
+
+  // get Site Image from meta
+//   let siteImage = await page.evaluate(() => {
+//    return document.head
+//      .querySelector('meta[property="og:image"]')
+//      .getAttribute("content");
+//  });
+let siteImage = ''
 
   // get color from navbar links
   let siteColor = await page.$eval('nav li  a', el => getComputedStyle(el).getPropertyValue('color'))
@@ -216,7 +216,6 @@ async function run(url, email) {
       "css": {
         "admin_userVisibility": "visible",
         "globalCss": "slick-film-strip{ margin-top: 10px;}"
-
       },
       "floatingButtons": {
         "compactMode": "default",
@@ -1310,10 +1309,14 @@ async function run(url, email) {
   }
 }
 
-run(
-  "https://avirtuouswoman.org","melissaringstaff@gmail.com"
-);
+// run(
+//   "https://avirtuouswoman.org","melissaringstaff@gmail.com"
+// );
 
+// cloudflare issue? 
 // run(
 //   "https://idealme.com/10-blogging-apps-every-blogger-should-be-using/","info@idealme.com"
 // );
+
+// get attribute error 
+run(' https://www.domestically-speaking.com/', ' domesticallyspeaking@yahoo.com')
