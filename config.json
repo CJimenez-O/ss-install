@@ -32,11 +32,11 @@
           ""
         ],
         "adminEmails": [
-          " domesticallyspeaking@yahoo.com"
+          " "
         ],
-        "siteName": "Domestically Speaking",
-        "imageUrl": "",
-        "highlightColor": "rgb(173, 172, 165)"
+        "siteName": "Cream Of The Crop Crochet",
+        "imageUrl": "https://i0.wp.com/creamofthecropcrochet.com/wp-content/uploads/2016/09/14508526_10206359621142522_1988905092_n.jpg",
+        "highlightColor": "rgb(85, 85, 85)"
       },
       "indexing": {
         "admin_userVisibility": "visible",
@@ -128,7 +128,7 @@
       },
       "searchHooks": {
         "admin_userVisibility": "visible",
-        "selectors": [".search-toggle-icon",".search-form",".search-field",".search-toggle-open-container",".widget_search"]
+        "selectors": [".search-form",".search",".widget_search"]
       },
       "inlineSearch": {
         "admin_userVisibility": "visible",

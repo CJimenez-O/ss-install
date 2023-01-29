@@ -1,25 +1,25 @@
 // ============= Description =====================
-// - Using site url and email as parameters we can 
-// - go to homepage and grab Meta Site Image
+// - Using site url and email as parameters we can
 // - Grabs post url from post-sitemap
-// - After jumping to post it searchs for 
-// - DCM selector available 
-// - Search Selectors available 
+// - After jumping to post it searchs for
+// - DCM selector available
+// - Search Selectors available
 // - Site Name
 // - Site Color
-// - Then add all values to Slickstream config 
-// - create config.json 
+// - Site Image
+// - Then add all values to Slickstream config
+// - create config.json
 
 // ============= Need to add =====================
-// add error catching for all values and continue if errors
+// post url verification check 
+// network checks 200 404 
 //
 // nice possible trigger when site finishes " site review " ?
-// run with button click ? 
-
+// run with button click ?
 
 const GetSitemapLinks = require("get-sitemap-links").default;
 const puppeteer = require("puppeteer");
-var fs = require('fs');
+var fs = require("fs");
 
 async function run(url, email) {
   const browser = await puppeteer.launch({
@@ -28,43 +28,49 @@ async function run(url, email) {
   });
 
   const page = await browser.newPage();
+  // cloudflare bypass - temp solution 
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0')
+  await page.setViewport({ width: 1280, height: 720 });
 
   // get post link from sitemap
-  const postLinks = await GetSitemapLinks(
-    `${url}/post-sitemap.xml`
-  );
-
-  let postUrl = postLinks[2]
+  const postLinks = await GetSitemapLinks(`${url}/post-sitemap.xml`);
+  let postUrl = postLinks[2];
+  // if sitemap index fails use homepage as url
+  if(postUrl == undefined){
+    postUrl = url
+  }
+  // console.log(postLinks)
   // console.log(postUrl)
-  console.log(`Demo Link: ${postUrl}`)
+  
+  console.log(`Demo Link: ${postUrl}?enable-slickstream`);
   await goto_Page(`${postUrl}`, { waitUntil: "networkidle0" });
 
-  // check if DCM selectors exist 
+  // check if DCM selectors exist
   let dcmSelector = await page.evaluate(() => {
-
     let dcmSelectorList = [
-      'entry-content',
-      'post-content',
-      'elementor-widget-theme-post-content',
-      'isopad'
-    ]
+      "entry-content",
+      "post-content",
+      "elementor-widget-theme-post-content",
+      "isopad",
+    ];
 
-    for(let i = 0; i <= dcmSelectorList.length-1; i++){
+    for (let i = 0; i <= dcmSelectorList.length - 1; i++) {
       try {
-        if (document.querySelector(`.${dcmSelectorList[i]}`).innerHTML !== null) {
+        if (
+          document.querySelector(`.${dcmSelectorList[i]}`).innerHTML !== null
+        ) {
           return dcmSelectorList[i];
         }
       } catch {
         console.log("Fail");
       }
     }
-    
   });
 
-  if(dcmSelector !== undefined){
-    console.log("\x1b[32m", 'DCM: Success')
-  }else{
-    console.log("\x1b[31m",'DCM: Failed')
+  if (dcmSelector !== undefined) {
+    console.log("\x1b[32m", "DCM: Success");
+  } else {
+    console.log("\x1b[31m", "DCM: Failed");
   }
 
   // check if search classes exist
@@ -89,7 +95,7 @@ async function run(url, email) {
       "fa-search",
       "mobile-searchform",
       "feastsearchtoggle",
-      "uagb-search-form__container"
+      "uagb-search-form__container",
     ];
 
     for (let i = 0; i <= searchSelectors.length - 1; i++) {
@@ -100,16 +106,15 @@ async function run(url, email) {
       } catch {
         console.log("fail");
       }
-      
     }
 
     return existingSearch;
   });
 
-  if(searchFunc.length !== 0){
-    console.log("\x1b[32m",'Search Hooks: Success')
-  }else{
-    console.log("\x1b[31m",'Search Hooks: Failed')
+  if (searchFunc.length !== 0) {
+    console.log("\x1b[32m", "Search Hooks: Success");
+  } else {
+    console.log("\x1b[31m", "Search Hooks: Failed");
   }
 
   // get Site name from Meta
@@ -120,21 +125,36 @@ async function run(url, email) {
   });
 
   // get Site Image from meta
-//   let siteImage = await page.evaluate(() => {
-//    return document.head
-//      .querySelector('meta[property="og:image"]')
-//      .getAttribute("content");
-//  });
-let siteImage = ''
+
+  let siteImage = await page.evaluate(() => {
+    try {
+      if (
+        document.head
+          .querySelector('meta[property="og:image"]')
+          .getAttribute("content")
+      ) {
+        return document.head
+          .querySelector('meta[property="og:image"]')
+          .getAttribute("content");
+      }
+    } catch {
+      return " ";
+    }
+  });
+
 
   // get color from navbar links
-  let siteColor = await page.$eval('nav li  a', el => getComputedStyle(el).getPropertyValue('color'))
- 
- 
+
+  let siteColor = await page.$eval("nav li  a", (el) =>
+  getComputedStyle(el).getPropertyValue("color"));
+
+
+  await page.screenshot({
+    path: 'screenshot-end.jpg'
+  });
   await browser.close();
 
-  let config = 
-  `
+  let config = `
   {
     "features": {
       "admin_product": "engagement-suite-for-bloggers",
@@ -273,9 +293,11 @@ let siteImage = ''
             "id": "below-content-DCM",
             "injection": "auto-inject",
             "initialGroup": "related",
-            "injectionSelector": ${JSON.stringify('.' + dcmSelector)},
+            "injectionSelector": ${JSON.stringify("." + dcmSelector)},
             "injectionPosition": "after selector",
-            "titleHtml": ${JSON.stringify("<span class=\"ss-widget-title\">Explore More</span>")},
+            "titleHtml": ${JSON.stringify(
+              '<span class="ss-widget-title">Explore More</span>'
+            )},
             "theme": "auto",
             "themeParameters": [],
             "fallbackGroup": "related",
@@ -286,7 +308,9 @@ let siteImage = ''
             "id": "in-content-DCM",
             "injection": "auto-inject",
             "initialGroup": "related",
-            "injectionSelector": ${JSON.stringify('.' + dcmSelector + ' ' + 'p:nth-of-type(6)')} ,
+            "injectionSelector": ${JSON.stringify(
+              "." + dcmSelector + " " + "p:nth-of-type(6)"
+            )} ,
             "injectionPosition": "after selector",
             "theme": "auto",
             "themeParameters": [],
@@ -1287,24 +1311,22 @@ let siteImage = ''
   }
   
   
-  `
+  `;
 
   // create config json file
-  fs.writeFile ("config.json", config, function(err) {
+  fs.writeFile("config.json", config, function (err) {
     if (err) throw err;
-    }
-  );
+  });
 
-  // launch and catch error is DOM is not loaded in 18 seconds 
-  async function goto_Page(page_URL, sym) {
+  // launch and catch error is DOM is not loaded in 18 seconds
+  async function goto_Page(page_URL) {
     try {
       await page.goto(page_URL, {
         waitUntil: "domcontentloaded",
         timeout: 18000,
       });
     } catch {
-      console.log(`Error in loading ${sym} page, re-trying...`);
-      await goto_Page(page_URL);
+      console.log(`Error loading page.`);
     }
   }
 }
@@ -1313,10 +1335,14 @@ let siteImage = ''
 //   "https://avirtuouswoman.org","melissaringstaff@gmail.com"
 // );
 
-// cloudflare issue? 
+// cloudflare issue and post verification
 // run(
-//   "https://idealme.com/10-blogging-apps-every-blogger-should-be-using/","info@idealme.com"
+//   "https://idealme.com/","info@idealme.com"
 // );
 
-// get attribute error 
-run(' https://www.domestically-speaking.com/', ' domesticallyspeaking@yahoo.com')
+
+
+// run(
+//   "https://creamofthecropcrochet.com/",
+//   " "
+// );
