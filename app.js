@@ -1,7 +1,7 @@
 // ============= Description =====================
 // - Using site url and email as parameters we can
-// - Grabs post url from post-sitemap
-// - After jumping to post it searchs for
+// - Grab post url from post-sitemap
+// - After jumping to post, it searchs: 
 // - DCM selector available
 // - Search Selectors available
 // - Site Name
@@ -9,10 +9,14 @@
 // - Site Image
 // - Then add all values to Slickstream config
 // - create config.json
+// 
+// 1. Onboard site 
+// 2. Install plug in
+// 3. Wait for SS to index 1 post 
+// 4. Gernerate config 
 
 // ============= Need to add =====================
-// post url verification check 
-// network checks 200 404 
+// post url verification check or 404 
 //
 // nice possible trigger when site finishes " site review " ?
 // run with button click ?
@@ -21,7 +25,7 @@ const GetSitemapLinks = require("get-sitemap-links").default;
 const puppeteer = require("puppeteer");
 var fs = require("fs");
 
-async function run(url, email) {
+async function run(homepageUrl, email) {
   const browser = await puppeteer.launch({
     headless: true,
     ignoreHTTPSErrors: true,
@@ -33,17 +37,37 @@ async function run(url, email) {
   await page.setViewport({ width: 1280, height: 720 });
 
   // get post link from sitemap
-  const postLinks = await GetSitemapLinks(`${url}/post-sitemap.xml`);
+  const postLinks = await GetSitemapLinks(`${homepageUrl}/post-sitemap.xml`);
   let postUrl = postLinks[2];
+
   // if sitemap index fails use homepage as url
   if(postUrl == undefined){
-    postUrl = url
+    postUrl = homepageUrl
   }
   // console.log(postLinks)
   // console.log(postUrl)
   
-  console.log(`Demo Link: ${postUrl}?enable-slickstream`);
-  await goto_Page(`${postUrl}`, { waitUntil: "networkidle0" });
+
+  // if post url gets 404, use homepage as link to scrape 
+  try{
+    let result = await page.goto(`${postUrl}`, {
+      waitUntil: "domcontentloaded",
+      timeout: 10000,
+    });
+    if(result.status() == 404){
+      await page.goto(`${homepageUrl}`, {
+        waitUntil: "domcontentloaded",
+        timeout: 10000,
+      });
+      console.log(`Demo Link: ${homepageUrl}?enable-slickstream`);
+    }else{
+      console.log(`Demo Link: ${postUrl}?enable-slickstream`);
+    }
+  
+  }catch (err){
+    console.log('Error loading page:', err);
+
+  }
 
   // check if DCM selectors exist
   let dcmSelector = await page.evaluate(() => {
@@ -1318,21 +1342,11 @@ async function run(url, email) {
     if (err) throw err;
   });
 
-  // launch and catch error is DOM is not loaded in 18 seconds
-  async function goto_Page(page_URL) {
-    try {
-      await page.goto(page_URL, {
-        waitUntil: "domcontentloaded",
-        timeout: 18000,
-      });
-    } catch {
-      console.log(`Error loading page.`);
-    }
-  }
+ 
 }
 
 // run(
-//   "https://avirtuouswoman.org","melissaringstaff@gmail.com"
+//   "https://castandspear.com/","melissaringstaff@gmail.com"
 // );
 
 // cloudflare issue and post verification
@@ -1340,9 +1354,3 @@ async function run(url, email) {
 //   "https://idealme.com/","info@idealme.com"
 // );
 
-
-
-// run(
-//   "https://creamofthecropcrochet.com/",
-//   " "
-// );

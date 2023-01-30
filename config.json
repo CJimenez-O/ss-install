@@ -32,11 +32,11 @@
           ""
         ],
         "adminEmails": [
-          " "
+          "info@idealme.com"
         ],
-        "siteName": "Cream Of The Crop Crochet",
-        "imageUrl": "https://i0.wp.com/creamofthecropcrochet.com/wp-content/uploads/2016/09/14508526_10206359621142522_1988905092_n.jpg",
-        "highlightColor": "rgb(85, 85, 85)"
+        "siteName": "Ideal Me - Design your life",
+        "imageUrl": " ",
+        "highlightColor": "rgb(34, 34, 34)"
       },
       "indexing": {
         "admin_userVisibility": "visible",
@@ -128,7 +128,7 @@
       },
       "searchHooks": {
         "admin_userVisibility": "visible",
-        "selectors": [".search-form",".search",".widget_search"]
+        "selectors": [".fa-search"]
       },
       "inlineSearch": {
         "admin_userVisibility": "visible",
@@ -137,7 +137,7 @@
             "id": "below-content-DCM",
             "injection": "auto-inject",
             "initialGroup": "related",
-            "injectionSelector": ".entry-content",
+            "injectionSelector": ".isopad",
             "injectionPosition": "after selector",
             "titleHtml": "<span class=\"ss-widget-title\">Explore More</span>",
             "theme": "auto",
@@ -150,7 +150,7 @@
             "id": "in-content-DCM",
             "injection": "auto-inject",
             "initialGroup": "related",
-            "injectionSelector": ".entry-content p:nth-of-type(6)" ,
+            "injectionSelector": ".isopad p:nth-of-type(6)" ,
             "injectionPosition": "after selector",
             "theme": "auto",
             "themeParameters": [],
