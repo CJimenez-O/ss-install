@@ -76,6 +76,7 @@ async function run(homepageUrl, email) {
       "post-content",
       "elementor-widget-theme-post-content",
       "isopad",
+      "fl-post-content"
     ];
 
     for (let i = 0; i <= dcmSelectorList.length - 1; i++) {
@@ -120,6 +121,8 @@ async function run(homepageUrl, email) {
       "mobile-searchform",
       "feastsearchtoggle",
       "uagb-search-form__container",
+      "ast-search-icon",
+      "fl-search-input"
     ];
 
     for (let i = 0; i <= searchSelectors.length - 1; i++) {
@@ -143,10 +146,20 @@ async function run(homepageUrl, email) {
 
   // get Site name from Meta
   let siteName = await page.evaluate(() => {
-    return document.head
-      .querySelector('meta[property="og:site_name"]')
-      .getAttribute("content");
+    try{
+      if(document.head
+        .querySelector('meta[property="og:site_name"]')
+        .getAttribute("content")){
+          return document.head
+          .querySelector('meta[property="og:site_name"]')
+          .getAttribute("content");
+        }
+    }catch{
+      return ""
+    }
+   
   });
+
 
   // get Site Image from meta
 
@@ -168,10 +181,9 @@ async function run(homepageUrl, email) {
 
 
   // get color from navbar links
-
-  let siteColor = await page.$eval("nav li  a", (el) =>
+  // nav p a 
+  let siteColor = await page.$eval("a", (el) =>
   getComputedStyle(el).getPropertyValue("color"));
-
 
   await page.screenshot({
     path: 'screenshot-end.jpg'
@@ -1345,9 +1357,9 @@ async function run(homepageUrl, email) {
  
 }
 
-// run(
-//   "https://castandspear.com/","melissaringstaff@gmail.com"
-// );
+run(
+  "https://www.chilimath.com/","chilimath@gmail.com"
+);
 
 // cloudflare issue and post verification
 // run(

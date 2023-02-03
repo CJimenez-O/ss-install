@@ -32,11 +32,11 @@
           ""
         ],
         "adminEmails": [
-          "info@idealme.com"
+          "chilimath@gmail.com"
         ],
-        "siteName": "Ideal Me - Design your life",
-        "imageUrl": " ",
-        "highlightColor": "rgb(34, 34, 34)"
+        "siteName": "ChiliMath",
+        "imageUrl": "https://www.chilimath.com/wp-content/uploads/2019/12/mike-estela-v2.png",
+        "highlightColor": "rgb(3, 107, 198)"
       },
       "indexing": {
         "admin_userVisibility": "visible",
@@ -128,7 +128,7 @@
       },
       "searchHooks": {
         "admin_userVisibility": "visible",
-        "selectors": [".fa-search"]
+        "selectors": [".wp-block-search__icon-button"]
       },
       "inlineSearch": {
         "admin_userVisibility": "visible",
@@ -137,7 +137,7 @@
             "id": "below-content-DCM",
             "injection": "auto-inject",
             "initialGroup": "related",
-            "injectionSelector": ".isopad",
+            "injectionSelector": ".entry-content",
             "injectionPosition": "after selector",
             "titleHtml": "<span class=\"ss-widget-title\">Explore More</span>",
             "theme": "auto",
@@ -150,7 +150,7 @@
             "id": "in-content-DCM",
             "injection": "auto-inject",
             "initialGroup": "related",
-            "injectionSelector": ".isopad p:nth-of-type(6)" ,
+            "injectionSelector": ".entry-content p:nth-of-type(6)" ,
             "injectionPosition": "after selector",
             "theme": "auto",
             "themeParameters": [],
