@@ -3,7 +3,6 @@ Install Dependencies
   
 ============= Description =====================
 - Using site url and email as parameters we can 
-- go to homepage and grab Meta Site Image
 - Grabs post url from post-sitemap
 - After jumping to post it searchs for 
 - DCM selector available 
